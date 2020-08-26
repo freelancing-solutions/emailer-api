@@ -35,7 +35,7 @@ app.use(cors());
 
 
 app.get('/', (req,res) => {
-    res.status(200).json({message :'hello world'});
+    res.status(200).send({message: 'hello world'});
 });
 
 
@@ -58,7 +58,7 @@ app.post('/api/v1/send-noreply', (req,res) => {
     text : '',
     html: '',
     to : ''
-  }
+  };
   
   try{
 
@@ -75,25 +75,25 @@ app.post('/api/v1/send-noreply', (req,res) => {
   if (utilities.validateEmail(email.to) === false){
     results.status = false;
     results.error = {message: 'error: email is invalid'};
-    return res.status(401).json(results);
+    return res.status(401).send(results);
   }
 
   if (utilities.isEmpty(email.subject)){
     results.status = false;
     results.error = {message: 'error: subject cannot be empty'};
-    return res.status(401).json(results);
+    return res.status(401).send(results);
   }
 
   if (utilities.isEmpty(email.text)){
     results.status = false;
     results.error = {message : 'error: text field cannot be empty'};
-    return res.status(401).json(results);
+    return res.status(401).send(results);
   }
 
   if (utilities.isEmpty(email.html)){
     results.status = false;
     results.error = {message : 'error: html field cannot be empty'};
-    return res.status(401).json(results);
+    return res.status(401).send(results);
   }
 
   /***
@@ -102,7 +102,7 @@ app.post('/api/v1/send-noreply', (req,res) => {
 
   send_noreply(email).then(response => {
     // returning the response
-    res.status(200).json(response);  
+    res.status(200).text();
   }).catch(error => {
     results.status = false;
     results.error = {message: `error: ${error.message}`};
