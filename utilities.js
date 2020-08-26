@@ -374,5 +374,5 @@ isInternet = () => {return true}
 
 
 module.exports = {
-    utitilies : new Utilities(Date.now())
+    utilities : new Utilities(Date.now())
 };

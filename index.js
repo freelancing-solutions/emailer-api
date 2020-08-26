@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const config = require("config");
 const cors = require("cors");
 const {send_noreply,send_admin} = require('./mailer');
-const utilities = require('./utilities');
+const {utilities} = require('./utilities');
 const mongoose = require('mongoose');
 const { util } = require("config");
 const PORT = process.env.PORT || 7001;
@@ -27,7 +27,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse json requests
-app.use(bodyParser.json());
+app.use(bodyParser.json({extended: true}));
 
 
 // adding cors
@@ -37,9 +37,6 @@ app.use(cors());
 app.get('/', (req,res) => {
     res.status(200).json({message :'hello world'});
 });
-
-
-
 
 
 app.post('/api/v1/send-noreply', (req,res) => {
@@ -55,8 +52,25 @@ app.post('/api/v1/send-noreply', (req,res) => {
    * 
    */
   
-  const {email} = req.params;
-  console.log('data ',email);
+
+  let email = {
+    subject: '',
+    text : '',
+    html: '',
+    to : ''
+  }
+  
+  try{
+
+    console.log('PARAMS :',req.body);
+    const{subject,text,html,to} = (req.body);
+    email ={
+      subject:subject,text:text,html:html,to:to
+    }
+  }catch(error){
+    console.log('error', error);
+  }
+  console.log('Email : ',email);
 
   if (utilities.validateEmail(email.to) === false){
     results.status = false;
@@ -101,6 +115,8 @@ app.post('/api/v1/send-noreply', (req,res) => {
 
 app.post('/api/v1/send-admin', (req,res) => {
   
+
+  // res.setHeader('Content-Type','application/json');
   // format of my api
   const results = {status : false, payload: {}, error: {}};
   /**
@@ -117,6 +133,7 @@ app.post('/api/v1/send-admin', (req,res) => {
   if (utilities.validateEmail(email.to) === false){
     results.status = false;
     results.error = {message: 'error: email is invalid'};
+    
     return res.status(401).json(results);
   }
 
