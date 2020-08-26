@@ -24,6 +24,7 @@ const send_noreply_messages = async email => {
           
           
       // send mail with defined transport object
+      console.log('started sending email : ', transporter);
       let info = await transporter.sendMail({
         from: process.env.NOREPLY_USERNAME || config.get('noreply_username'), // sender address
         to: email.to, // list of receivers
