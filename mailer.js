@@ -24,10 +24,6 @@ const send_noreply_messages = async email => {
           
           
       // send mail with defined transport object
-<<<<<<< HEAD
-=======
-      console.log('started sending email : ', transporter);
->>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
       let info = await transporter.sendMail({
         from: process.env.NOREPLY_USERNAME || config.get('noreply_username'), // sender address
         to: email.to, // list of receivers
@@ -51,7 +47,6 @@ const send_noreply_messages = async email => {
 };
 
 
-<<<<<<< HEAD
 const send_support = async email => {
 const results = {status : true, payload : {}, error :{}};
 try{
@@ -130,19 +125,13 @@ const send_admin_messages = async email => {
 
 
 
-=======
->>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
 /***
  * Used to send notification Messages
  * ...Deposit Verified Message, Withdrawal Sent, Account Funded Message
  * 
  * 
  **/
-<<<<<<< HEAD
 const send_affiliates_messages = async email => {
-=======
-const send_admin_messages = async email => {
->>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   
   const results = {status : true, payload : {}, error :{}};
 
@@ -153,24 +142,15 @@ const send_admin_messages = async email => {
           port: 587,
           secure: false, // true for 465, false for other ports
           auth: {
-<<<<<<< HEAD
             user: process.env.AFFILIATES_USERNAME || config.get('affiliates_username'), // generated ethereal user
             pass: process.env.AFFILIATES_PASSWORD || config.get('affiliates_password'), // generated ethereal password
-=======
-            user: process.env.ADMIN_USERNAME || config.get('admin_username'), // generated ethereal user
-            pass: process.env.ADMIN_PASSWORD || config.get('admin_password'), // generated ethereal password
->>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
           },
         });
         
         
     // send mail with defined transport object
     let info = await transporter.sendMail({
-<<<<<<< HEAD
       from: process.env.AFFILIATES_USERNAME || config.get('affiliates_username'), // sender address
-=======
-      from: process.env.ADMIN_USERNAME || config.get('admin_username'), // sender address
->>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
       to: email.to, // list of receivers
       subject: email.subject, // Subject line
       text: email.text, // plain text body
@@ -193,16 +173,10 @@ const send_admin_messages = async email => {
 
 
 
-<<<<<<< HEAD
 
 module.exports = {
   send_noreply: send_noreply_messages,
   send_admin : send_admin_messages,
   send_support : send_support,
   send_affiliates : send_affiliates_messages  
-=======
-module.exports = {
-  send_noreply: send_noreply_messages,
-  send_admin : send_admin_messages  
->>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
 };
