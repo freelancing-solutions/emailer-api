@@ -45,15 +45,14 @@ const authorize =  (req,res,next) => {
     
         if (internal_key === key){
             authorized = true;
-            next()       
+            
         }else{        
             authorized = false;
-            res.status(200).json(results)
+            
         }
     }catch(error){
         next(error);
     }
-
     next()
 };
 
@@ -236,8 +235,30 @@ app.post('/api/v1/send-admin/:key', (req,res) => {
    * html 
    * 
    ***/
-  console.log('PARAMS : ',req.params);
-   const {email} = req.params;
+  /**
+   * format of email 
+   * to
+   * subject
+   * text
+   * html 
+   * 
+   **/
+  let email = {
+    subject: '',
+    text : '',
+    html: '',
+    to : ''
+  }
+  
+  try{    
+    const{subject,text,html,to} = (req.body);
+    email ={
+      subject:subject,text:text,html:html,to:to
+    }
+  }catch(error){
+    console.log('error', error);
+  }
+  console.log('Email : ',email);
 
   if (utilities.validateEmail(email.to) === false){
     results.status = false;
@@ -294,9 +315,23 @@ app.post('/api/v1/send-affiliates/:key', (req,res) => {
    * text
    * html 
    * 
-   ***/
-  console.log('PARAMS : ',req.params);
-   const {email} = req.params;
+   **/
+  let email = {
+    subject: '',
+    text : '',
+    html: '',
+    to : ''
+  }
+  
+  try{    
+    const{subject,text,html,to} = (req.body);
+    email ={
+      subject:subject,text:text,html:html,to:to
+    }
+  }catch(error){
+    console.log('error', error);
+  }
+  console.log('Email : ',email);
 
   if (utilities.validateEmail(email.to) === false){
     results.status = false;
