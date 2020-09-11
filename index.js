@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("config");
 const cors = require("cors");
-const {send_noreply,send_admin,send_support} = require('./mailer');
+const {send_noreply,send_admin,send_support,send_affiliates} = require('./mailer');
 const {utilities} = require('./utilities');
 const mongoose = require('mongoose');
 const { util } = require("config");
@@ -33,13 +33,42 @@ app.use(bodyParser.json({extended: true}));
 // adding cors
 app.use(cors());
 
+let authorized = false;
+
+const authorize =  (req,res,next) => {           
+    try{
+        const results = {status: false, payload : {}, error:{message: 'error user not authorized'}}
+        const internal_key = process.env.INTERNAL_KEY || config.get('INTERNAL_KEY');
+        const route  = req.originalUrl;
+        const routes = route.split('/');
+        const key = String(routes[routes.length - 1]).trim();
+    
+        if (internal_key === key){
+            authorized = true;
+            next()       
+        }else{        
+            authorized = false;
+            res.status(200).json(results)
+        }
+    }catch(error){
+        next(error);
+    }
+
+    next()
+};
+
+app.use(authorize);
 
 app.get('/', (req,res) => {
     res.status(200).send({message: 'hello world'});
 });
 
 
-app.post('/api/v1/send-noreply', (req,res) => {
+/***************************************************************************************
+ * Send No Reply Related Messages
+ * 
+ */
+app.post('/api/v1/send-noreply/:key', (req,res) => {
 
   // format of my api
   const results = {status : false, payload: {}, error: {}};
@@ -111,7 +140,13 @@ app.post('/api/v1/send-noreply', (req,res) => {
 
 });
 
-app.post('/api/v1/send-support', (req,res) => {
+
+
+/*************************************************************************************
+ * 
+ * Send Support Related Email Messages
+ */
+app.post('/api/v1/send-support/:key', (req,res) => {
 
   // format of my api
   const results = {status : false, payload: {}, error: {}};
@@ -179,7 +214,15 @@ app.post('/api/v1/send-support', (req,res) => {
 
 });
 
-app.post('/api/v1/send-admin', (req,res) => {
+
+
+/****************************************************************************************
+ * 
+ * 
+ * Send Admin Related Email Messages
+ */
+
+app.post('/api/v1/send-admin/:key', (req,res) => {
   
 
   // res.setHeader('Content-Type','application/json');
@@ -225,6 +268,65 @@ app.post('/api/v1/send-admin', (req,res) => {
 
   // called the send_admin API
   send_admin(email).then(response => {
+      res.status(200).json(response);
+    }).catch(error => {
+      results.status = false;
+      results.error = {message: `error: ${error.message}`};
+      res.status(401).json(results);
+  });
+  
+})
+
+
+/********************************************************************************
+ * 
+ * Send Affiliates related emails
+ */
+
+app.post('/api/v1/send-affiliates/:key', (req,res) => {
+  // res.setHeader('Content-Type','application/json');
+  // format of my api
+  const results = {status : false, payload: {}, error: {}};
+  /***
+   * format of email 
+   * to
+   * subject
+   * text
+   * html 
+   * 
+   ***/
+  console.log('PARAMS : ',req.params);
+   const {email} = req.params;
+
+  if (utilities.validateEmail(email.to) === false){
+    results.status = false;
+    results.error = {message: 'error: email is invalid'};
+    
+    return res.status(401).json(results);
+  }
+
+  if (utilities.isEmpty(email.subject)){
+    results.status = false;
+    results.error = {message: 'error: subject cannot be empty'};
+    return res.status(401).json(results);
+  }
+
+  if (utilities.isEmpty(email.text)){
+    results.status = false;
+    results.error = {message : 'error: text field cannot be empty'};
+    return res.status(401).json(results);
+  }
+
+  if (utilities.isEmpty(email.html)){
+    results.status = false;
+    results.error = {message : 'error: html field cannot be empty'};
+    return res.status(401).json(results);
+  }
+
+
+
+  // called the send_admin API
+  send_affiliates(email).then(response => {
       res.status(200).json(response);
     }).catch(error => {
       results.status = false;
