@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("config");
 const cors = require("cors");
-const {send_noreply,send_admin,send_support,send_affiliates} = require('./mailer');
+const {send_noreply,send_admin,send_support,send_affiliates,send_info} = require('./mailer');
 const {utilities} = require('./utilities');
 const mongoose = require('mongoose');
 const { util } = require("config");
@@ -45,9 +45,10 @@ const authorize =  (req,res,next) => {
     
         if (internal_key === key){
             authorized = true;
-            
+            res.status(401).json(results);
         }else{        
             authorized = false;
+            res.status(401).json(results);
             
         }
     }catch(error){
@@ -56,31 +57,10 @@ const authorize =  (req,res,next) => {
     next()
 };
 
-app.use(authorize);
-
-app.get('/', (req,res) => {
-    res.status(200).send({message: 'hello world'});
-});
 
 
-/***************************************************************************************
- * Send No Reply Related Messages
- * 
- */
-app.post('/api/v1/send-noreply/:key', (req,res) => {
 
-  // format of my api
-  const results = {status : false, payload: {}, error: {}};
-  /**
-   * format of email 
-   * to
-   * subject
-   * text
-   * html 
-   * 
-   **/
-  
-
+const verify_message = (req, res, next) => {
   let email = {
     subject: '',
     text : '',
@@ -123,19 +103,91 @@ app.post('/api/v1/send-noreply/:key', (req,res) => {
     results.error = {message : 'error: html field cannot be empty'};
     return res.status(401).json(results);
   }
+  
+  next(email)
+}
+
+app.get('/', (req,res) => {
+    res.status(200).send({message: 'hello world'});
+});
+
+app.use(authorize);
+app.use(verify_message);
+
+/***************************************************************************************
+ * Send No Reply Related Messages
+ * 
+ */
+app.post('/api/v1/send-noreply/:key', (req,res,email) => {
+
+  console.log('check the results : ', email);
+  // format of my api
+  const results = {status : false, payload: {}, error: {}};
+  /**
+   * format of email 
+   * to
+   * subject
+   * text
+   * html 
+   * 
+   **/
+  
+
+  // let email = {
+  //   subject: '',
+  //   text : '',
+  //   html: '',
+  //   to : ''
+  // }
+  
+  // try{
+
+  //   console.log('PARAMS :',req.body);
+  //   const{subject,text,html,to} = (req.body);
+  //   email ={
+  //     subject:subject,text:text,html:html,to:to
+  //   }
+  // }catch(error){
+  //   console.log('error', error);
+  // }
+  // console.log('Email : ',email);
+
+  // if (utilities.validateEmail(email.to) === false){
+  //   results.status = false;
+  //   results.error = {message: 'error: email is invalid'};
+  //   return res.status(401).json(results);
+  // }
+
+  // if (utilities.isEmpty(email.subject)){
+  //   results.status = false;
+  //   results.error = {message: 'error: subject cannot be empty'};
+  //   return res.status(401).json(results);
+  // }
+
+  // if (utilities.isEmpty(email.text)){
+  //   results.status = false;
+  //   results.error = {message : 'error: text field cannot be empty'};
+  //   return res.status(401).json(results);
+  // }
+
+  // if (utilities.isEmpty(email.html)){
+  //   results.status = false;
+  //   results.error = {message : 'error: html field cannot be empty'};
+  //   return res.status(401).json(results);
+  // }
 
   /***
    * all is well call the API
    ***/
 
-  send_noreply(email).then(response => {
-    // returning the response
-    res.status(200).json(response);  
-  }).catch(error => {
-    results.status = false;
-    results.error = {message: `error: ${error.message}`};
-    res.status(401).json(results);
-  });
+  // send_noreply(email).then(response => {
+  //   // returning the response
+  //   res.status(200).json(response);  
+  // }).catch(error => {
+  //   results.status = false;
+  //   results.error = {message: `error: ${error.message}`};
+  //   res.status(401).json(results);
+  // });
 
 });
 
@@ -370,6 +422,79 @@ app.post('/api/v1/send-affiliates/:key', (req,res) => {
   });
   
 })
+
+/*************************************************************************
+ * Send Info
+ * 
+ */
+
+app.post('/api/v1/send-info/:key', (req,res) => {
+  // res.setHeader('Content-Type','application/json');
+  // format of my api
+  const results = {status : false, payload: {}, error: {}};
+  /***
+   * format of email 
+   * to
+   * subject
+   * text
+   * html 
+   * 
+   **/
+  let email = {
+    subject: '',
+    text : '',
+    html: '',
+    to : ''
+  }
+  
+  try{    
+    const{subject,text,html,to} = (req.body);
+    email ={
+      subject:subject,text:text,html:html,to:to
+    }
+  }catch(error){
+    console.log('error', error);
+  }
+  console.log('Email : ',email);
+
+  if (utilities.validateEmail(email.to) === false){
+    results.status = false;
+    results.error = {message: 'error: email is invalid'};
+    
+    return res.status(401).json(results);
+  }
+
+  if (utilities.isEmpty(email.subject)){
+    results.status = false;
+    results.error = {message: 'error: subject cannot be empty'};
+    return res.status(401).json(results);
+  }
+
+  if (utilities.isEmpty(email.text)){
+    results.status = false;
+    results.error = {message : 'error: text field cannot be empty'};
+    return res.status(401).json(results);
+  }
+
+  if (utilities.isEmpty(email.html)){
+    results.status = false;
+    results.error = {message : 'error: html field cannot be empty'};
+    return res.status(401).json(results);
+  }
+
+
+
+  // called the send_admin API
+  send_info(email).then(response => {
+      res.status(200).json(response);
+    }).catch(error => {
+      results.status = false;
+      results.error = {message: `error: ${error.message}`};
+      res.status(401).json(results);
+  });
+  
+})
+
 
 
 // listening for requests
