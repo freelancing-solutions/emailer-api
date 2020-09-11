@@ -44,11 +44,10 @@ const authorize =  (req,res,next) => {
         const key = String(routes[routes.length - 1]).trim();
     
         if (internal_key === key){
-            authorized = true;
-            res.status(401).json(results);
+            authorized = true;            
         }else{        
             authorized = false;
-            res.status(401).json(results);
+            return res.status(401).json(results);
             
         }
     }catch(error){
