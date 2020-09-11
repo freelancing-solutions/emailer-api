@@ -2,7 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("config");
 const cors = require("cors");
+<<<<<<< HEAD
 const {send_noreply,send_admin,send_support} = require('./mailer');
+=======
+const {send_noreply,send_admin} = require('./mailer');
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
 const {utilities} = require('./utilities');
 const mongoose = require('mongoose');
 const { util } = require("config");
@@ -35,7 +39,7 @@ app.use(cors());
 
 
 app.get('/', (req,res) => {
-    res.status(200).json({message :'hello world'});
+    res.status(200).send({message: 'hello world'});
 });
 
 
@@ -50,7 +54,11 @@ app.post('/api/v1/send-noreply', (req,res) => {
    * text
    * html 
    * 
+<<<<<<< HEAD
    **/
+=======
+   */
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   
 
   let email = {
@@ -58,7 +66,11 @@ app.post('/api/v1/send-noreply', (req,res) => {
     text : '',
     html: '',
     to : ''
+<<<<<<< HEAD
   }
+=======
+  };
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   
   try{
 
@@ -75,34 +87,58 @@ app.post('/api/v1/send-noreply', (req,res) => {
   if (utilities.validateEmail(email.to) === false){
     results.status = false;
     results.error = {message: 'error: email is invalid'};
+<<<<<<< HEAD
     return res.status(401).json(results);
+=======
+    return res.status(401).send(results);
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   }
 
   if (utilities.isEmpty(email.subject)){
     results.status = false;
     results.error = {message: 'error: subject cannot be empty'};
+<<<<<<< HEAD
     return res.status(401).json(results);
+=======
+    return res.status(401).send(results);
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   }
 
   if (utilities.isEmpty(email.text)){
     results.status = false;
     results.error = {message : 'error: text field cannot be empty'};
+<<<<<<< HEAD
     return res.status(401).json(results);
+=======
+    return res.status(401).send(results);
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   }
 
   if (utilities.isEmpty(email.html)){
     results.status = false;
     results.error = {message : 'error: html field cannot be empty'};
+<<<<<<< HEAD
     return res.status(401).json(results);
+=======
+    return res.status(401).send(results);
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   }
 
   /***
    * all is well call the API
+<<<<<<< HEAD
    ***/
 
   send_noreply(email).then(response => {
     // returning the response
     res.status(200).json(response);  
+=======
+   */
+
+  send_noreply(email).then(response => {
+    // returning the response
+    res.status(200).text();
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   }).catch(error => {
     results.status = false;
     results.error = {message: `error: ${error.message}`};
@@ -111,6 +147,7 @@ app.post('/api/v1/send-noreply', (req,res) => {
 
 });
 
+<<<<<<< HEAD
 app.post('/api/v1/send-support', (req,res) => {
 
   // format of my api
@@ -178,6 +215,9 @@ app.post('/api/v1/send-support', (req,res) => {
   });
 
 });
+=======
+
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
 
 app.post('/api/v1/send-admin', (req,res) => {
   
@@ -185,14 +225,22 @@ app.post('/api/v1/send-admin', (req,res) => {
   // res.setHeader('Content-Type','application/json');
   // format of my api
   const results = {status : false, payload: {}, error: {}};
+<<<<<<< HEAD
   /***
+=======
+  /**
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
    * format of email 
    * to
    * subject
    * text
    * html 
    * 
+<<<<<<< HEAD
    ***/
+=======
+   */
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   console.log('PARAMS : ',req.params);
    const {email} = req.params;
 
@@ -221,8 +269,11 @@ app.post('/api/v1/send-admin', (req,res) => {
     return res.status(401).json(results);
   }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> a1640ff802e096c0afcc5bcd02aca98646d9aa48
   // called the send_admin API
   send_admin(email).then(response => {
       res.status(200).json(response);
