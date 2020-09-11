@@ -60,6 +60,7 @@ const authorize =  (req,res,next) => {
 
 
 const verify_message = (req, res, next) => {
+  const results = {status : false, payload: {}, error: {}};
   let email = {
     subject: '',
     text : '',
@@ -104,7 +105,7 @@ const verify_message = (req, res, next) => {
   }
   
   next(email)
-}
+};
 
 app.get('/', (req,res) => {
     res.status(200).send({message: 'hello world'});
