@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("config");
 const cors = require("cors");
-const {send_noreply,send_admin} = require('./mailer');
+const {send_noreply,send_admin,send_support} = require('./mailer');
 const {utilities} = require('./utilities');
 const mongoose = require('mongoose');
 const { util } = require("config");
@@ -50,7 +50,7 @@ app.post('/api/v1/send-noreply', (req,res) => {
    * text
    * html 
    * 
-   */
+   **/
   
 
   let email = {
@@ -98,7 +98,7 @@ app.post('/api/v1/send-noreply', (req,res) => {
 
   /***
    * all is well call the API
-   */
+   ***/
 
   send_noreply(email).then(response => {
     // returning the response
@@ -122,9 +122,7 @@ app.post('/api/v1/send-support', (req,res) => {
    * text
    * html 
    * 
-   */
-  
-
+   **/
   let email = {
     subject: '',
     text : '',
@@ -132,9 +130,7 @@ app.post('/api/v1/send-support', (req,res) => {
     to : ''
   }
   
-  try{
-
-    console.log('PARAMS :',req.body);
+  try{    
     const{subject,text,html,to} = (req.body);
     email ={
       subject:subject,text:text,html:html,to:to
@@ -170,7 +166,7 @@ app.post('/api/v1/send-support', (req,res) => {
 
   /***
    * all is well call the API
-   */
+   ***/
 
   send_support(email).then(response => {
     // returning the response
@@ -189,14 +185,14 @@ app.post('/api/v1/send-admin', (req,res) => {
   // res.setHeader('Content-Type','application/json');
   // format of my api
   const results = {status : false, payload: {}, error: {}};
-  /**
+  /***
    * format of email 
    * to
    * subject
    * text
    * html 
    * 
-   */
+   ***/
   console.log('PARAMS : ',req.params);
    const {email} = req.params;
 
@@ -224,6 +220,8 @@ app.post('/api/v1/send-admin', (req,res) => {
     results.error = {message : 'error: html field cannot be empty'};
     return res.status(401).json(results);
   }
+
+
 
   // called the send_admin API
   send_admin(email).then(response => {
