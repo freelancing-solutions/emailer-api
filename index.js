@@ -60,31 +60,15 @@ const authorize =  (req,res,next) => {
 
 
 const verify_message = (req, res, next) => {
-  const results = {status : false, payload: {}, error: {}};
-  let email = {
-    subject: '',
-    text : '',
-    html: '',
-    to : ''
-  }
-  
-  try{
+    const results = {status : false, payload: {}, error: {}};
+    let email = { subject: '',text : '',html: '',to : ''}    
+    email ={ ... req.body};    
 
-    console.log('PARAMS :',req.body);
-    const{subject,text,html,to} = (req.body);
-    email ={
-      subject:subject,text:text,html:html,to:to
+    if (utilities.validateEmail(email.to) === false){
+      results.status = false;
+      results.error = {message: 'error: email is invalid'};
+      return res.status(401).json(results);
     }
-  }catch(error){
-    console.log('error', error);
-  }
-  console.log('Email : ',email);
-
-  if (utilities.validateEmail(email.to) === false){
-    results.status = false;
-    results.error = {message: 'error: email is invalid'};
-    return res.status(401).json(results);
-  }
 
   if (utilities.isEmpty(email.subject)){
     results.status = false;
