@@ -2,12 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("config");
 const cors = require("cors");
-const {send_noreply,send_admin,send_support,send_affiliates,send_info} = require('./mailer');
 const {utilities} = require('./utilities');
 const mongoose = require('mongoose');
 const { util } = require("config");
 const PORT = process.env.PORT || 7001;
-
+const validator = require('email-validator');
 
 // mongoose.connect(process.env.MONGODB_URI || config.get("mongoDB"), {
 //   useNewUrlParser: true,
@@ -34,12 +33,18 @@ app.use(bodyParser.json({extended: true}));
 app.use(cors());
 
 
+/*** set response headers to json this insures that the calling app can accept json strings **/
+const set_response_headers = (req, res, next) => {
+    // res.setHeader({'Content-Type': 'application/json'});
+    next();
+};
+
 /*******
  * API Key Based Authorization
  *******/
-const authorize =  (req,res,next) => {           
+const authorize =  (req,res,next) => {
+    const results = {status: false, payload : {}, error:{message: 'error user not authorized'}}
     try{
-        const results = {status: false, payload : {}, error:{message: 'error user not authorized'}}
         const internal_key = process.env.INTERNAL_KEY || config.get('INTERNAL_KEY');
         const route  = req.originalUrl;
         const routes = route.split('/');
@@ -54,7 +59,6 @@ const authorize =  (req,res,next) => {
         }
 
     }catch(error){
-
         res.locals.authorized = false;
         results.status = false;
         results.error = {message: 'general error : {}'.format(error)}
@@ -73,8 +77,8 @@ const verify_message = (req, res, next) => {
 
     if (res.locals.authorized){              
       email ={ ... req.body};    
-
-      if (utilities.validateEmail(email.to) === false){
+      console.log('email ', email);
+      if (validator.validate(email.to) === false){
         results.status = false;
         results.error = {message: 'error: email is invalid'};
         return res.status(401).json(results);
@@ -115,116 +119,10 @@ app.get('/', (req,res) => {
  * Personal Middle Ware
  */
 
+// app.use(set_response_headers);
 app.use(authorize);
-
 app.use(verify_message);
-
-
-/***************************************************************************************
- * Send No Reply Related Messages
- * 
- */
-app.post('/api/v1/send-noreply/:key', (req,res) => {
-  // format of my api
-  const results = {status : false, payload: {}, error: {}};
-  console.log('Check Email ',res.locals.email);
-  send_noreply(res.locals.email).then(response => {
-    // returning the response
-    res.status(200).json(response);  
-  }).catch(error => {
-    results.status = false;
-    results.error = {message: `error: ${error.message}`};
-    res.status(401).json(results);
-  });
-
-});
-
-/*************************************************************************************
- * 
- * Send Support Related Email Messages
- */
-app.post('/api/v1/send-support/:key', (req,res) => {
-
-  // format of my api
-  const results = {status : false, payload: {}, error: {}};
-
-  console.log('Check Email ',res.locals.email);
-  send_support(res.locals.email).then(response => {
-    // returning the response
-    res.status(200).json(response);  
-  }).catch(error => {
-    results.status = false;
-    results.error = {message: `error: ${error.message}`};
-    res.status(401).json(results);
-  });
-
-});
-
-/****************************************************************************************
- * 
- * 
- * Send Admin Related Email Messages
- */
-app.post('/api/v1/send-admin/:key', (req,res) => {
-  // res.setHeader('Content-Type','application/json');
-  // format of my api
-  const results = {status : false, payload: {}, error: {}};
-  console.log('Check Email ',res.locals.email);
-
-  // called the send_admin API
-  send_admin(res.locals.email).then(response => {
-      res.status(200).json(response);
-    }).catch(error => {
-      results.status = false;
-      results.error = {message: `error: ${error.message}`};
-      res.status(401).json(results);
-  });
-  
-})
-
-/********************************************************************************
- * 
- * Send Affiliates related emails
- */
-app.post('/api/v1/send-affiliates/:key', (req,res) => {
-  // res.setHeader('Content-Type','application/json');
-  // format of my api
-  const results = {status : false, payload: {}, error: {}};
-  console.log('Check Email ',res.locals.email);
-
-  // called the send_admin API
-  send_affiliates(res.locals.email).then(response => {
-      res.status(200).json(response);
-    }).catch(error => {
-      results.status = false;
-      results.error = {message: `error: ${error.message}`};
-      res.status(401).json(results);
-  });
-  
-})
-
-/*************************************************************************
- * Send Info
- * 
- */
-
-app.post('/api/v1/send-info/:key', (req,res) => {
-  // res.setHeader('Content-Type','application/json');
-  // format of my api
-  const results = {status : false, payload: {}, error: {}};
-  console.log('Check Email ',res.locals.email);
-  // called the send_admin API
-  send_info(res.locals.email).then(response => {
-      res.status(200).json(response);
-    }).catch(error => {
-      results.status = false;
-      results.error = {message: `error: ${error.message}`};
-      res.status(401).json(results);
-  });
-  
-})
-
-
+app.use('/api/v1/', require('./routes/version1'));
 
 // listening for requests
 app.listen(PORT).on('listening', () => {
