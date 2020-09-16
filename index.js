@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const { util } = require("config");
 const PORT = process.env.PORT || 7001;
 const validator = require('email-validator');
-
+const email_store = require('./stores');
 // mongoose.connect(process.env.MONGODB_URI || config.get("mongoDB"), {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -34,10 +34,11 @@ app.use(cors());
 
 
 /*** set response headers to json this insures that the calling app can accept json strings **/
-const set_response_headers = (req, res, next) => {
-    // res.setHeader({'Content-Type': 'application/json'});
+const set_request_time = (req, res, next) => {
+    req.requesttime = Date.now();
     next();
 };
+
 
 /*******
  * API Key Based Authorization
@@ -49,8 +50,10 @@ const authorize =  (req,res,next) => {
         const route  = req.originalUrl;
         const routes = route.split('/');
         const key = String(routes[routes.length - 1]).trim();
-        
-    
+        const api_call = String(routes[routes.length - 2]).trim();
+
+        res.locals.api_call = api_call;
+
         if (internal_key === key){
             res.locals.authorized = true;          
         }else{        
@@ -67,6 +70,19 @@ const authorize =  (req,res,next) => {
 
     next()
 };
+
+/*** create a middleware to temporarily hold email request and resend them later if error **/
+const mem_store_buffer = (req,res,next) => {
+
+    try{
+        console.log(email_store);
+        res.locals.email = email_store.email_store.store_email(res.locals.email,res.locals.api_call);
+        next();
+    }catch (error){
+        next(error);
+    }
+};
+
 
 /*****
  * Data Verification
@@ -119,10 +135,12 @@ app.get('/', (req,res) => {
  * Personal Middle Ware
  */
 
-// app.use(set_response_headers);
+
 app.use(authorize);
 app.use(verify_message);
+app.use(mem_store_buffer);
 app.use('/api/v1/', require('./routes/version1'));
+app.use('/api/v2/', require('./routes/version2'));
 
 // listening for requests
 app.listen(PORT).on('listening', () => {

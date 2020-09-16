@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const version1_api_calls = require('./mailer');
+const api_calls = require('./mailer');
 
 
 
@@ -13,7 +13,7 @@ router.post('/send-noreply/:key', (req,res) => {
   // format of my api
   const results = {status : false, payload: {}, error: {}};
   console.log('Check Email ',res.locals.email);
-  version1_api_calls.send_noreply(res.locals.email).then(response => {
+  api_calls.send_noreply(res.locals.email).then(response => {
     // returning the response
     res.status(200).json(response);
   }).catch(error => {
@@ -34,7 +34,7 @@ router.post('/send-support/:key', (req,res) => {
   const results = {status : false, payload: {}, error: {}};
 
   console.log('Check Email ',res.locals.email);
-  version1_api_calls.send_support(res.locals.email).then(response => {
+  api_calls.send_support(res.locals.email).then(response => {
     // returning the response
     res.status(200).json(response);
   }).catch(error => {
@@ -57,7 +57,7 @@ router.post('/send-admin/:key', (req,res) => {
   console.log('Check Email ',res.locals.email);
 
   // called the send_admin API
-  version1_api_calls.send_admin(res.locals.email).then(response => {
+  api_calls.send_admin(res.locals.email).then(response => {
       res.status(200).json(response);
     }).catch(error => {
       results.status = false;
@@ -78,7 +78,7 @@ router.post('/send-affiliates/:key', (req,res) => {
   console.log('Check Email ',res.locals.email);
 
   // called the send_admin API
-  version1_api_calls.send_affiliates(res.locals.email).then(response => {
+  api_calls.send_affiliates(res.locals.email).then(response => {
       res.status(200).json(response);
     }).catch(error => {
       results.status = false;
@@ -98,8 +98,9 @@ router.post('/send-info/:key', (req,res) => {
   // format of my api
   const results = {status : false, payload: {}, error: {}};
   console.log('Check Email ',res.locals.email);
+  console.log('check api call ', res.locals.api_call);
   // called the send_admin API
-  version1_api_calls.send_info(res.locals.email).then(response => {
+  api_calls.send_info(res.locals.email).then(response => {
       res.status(200).json(response);
     }).catch(error => {
       results.status = false;
