@@ -81,6 +81,24 @@ const send_support = async email => {
         email.from = process.env.SUPPORT_USERNAME || config.get('support_username');
         const user = process.env.SUPPORT_USERNAME || config.get('support_username');
         const pass = process.env.SUPPORT_PASSWORD || config.get('support_password');
+        email.html = {
+        body: {
+                title: 'Welcome to Pocket Money Wallet',
+                signature: 'Thank You',
+                intro: email.html,
+                action: {
+                    instructions: 'If there is anything we can help you with in anyway please let us know',
+                    button : {
+                        color: '#053473',
+                        text: 'Contact Us',
+                        link: 'https://pocket-money.site/contact'
+                    }
+                }
+            }
+        };
+        email.text = null;
+        email.html = mailGenerator.generate(email.html);
+
         return await  do_send_mail(user,pass,email);
     }catch(error){
       results.error = {...error};
@@ -100,6 +118,24 @@ const send_admin_messages = async email => {
         email.from = process.env.ADMIN_USERNAME || config.get('admin_username');
         const user = process.env.ADMIN_USERNAME || config.get('admin_username');
         const pass = process.env.ADMIN_PASSWORD || config.get('admin_password');
+        email.html = {
+        body: {
+                title: 'Welcome to Pocket Money Wallet',
+                signature: 'Thank You',
+                intro: email.html,
+                action: {
+                    instructions: 'If there is anything we can help you with in anyway please let us know',
+                    button : {
+                        color: '#053473',
+                        text: 'Contact Us',
+                        link: 'https://pocket-money.site/contact'
+                    }
+                }
+            }
+        };
+        email.text = null;
+        email.html = mailGenerator.generate(email.html);
+
         return await  do_send_mail(user,pass,email);
     }catch(error){
       results.error = {...error};
@@ -119,6 +155,24 @@ const send_affiliates_messages = async email => {
         email.from = process.env.AFFILIATES_USERNAME || config.get('affiliates_username');
         const user = process.env.AFFILIATES_USERNAME || config.get('affiliates_username');
         const pass = process.env.AFFILIATES_PASSWORD || config.get('affiliates_password');
+        email.html = {
+        body: {
+                title: 'Welcome to Pocket Money Wallet',
+                signature: 'Thank You',
+                intro: email.html,
+                action: {
+                    instructions: 'If there is anything we can help you with in anyway please let us know',
+                    button : {
+                        color: '#053473',
+                        text: 'Contact Us',
+                        link: 'https://pocket-money.site/contact'
+                    }
+                }
+            }
+        };
+        email.text = null;
+        email.html = mailGenerator.generate(email.html);
+
         return await  do_send_mail(user,pass,email);
     }catch(error){
       results.error = {...error};
@@ -138,6 +192,24 @@ const send_info = async email => {
         email.from = process.env.INFO_USERNAME || config.get('info_username');
         const user = process.env.INFO_USERNAME || config.get('info_username');
         const pass = process.env.INFO_PASSWORD || config.get('info_password');
+        email.html = {
+        body: {
+                title: 'Welcome to Pocket Money Wallet',
+                signature: 'Thank You',
+                intro: email.html,
+                action: {
+                    instructions: 'If there is anything we can help you with in anyway please let us know',
+                    button : {
+                        color: '#053473',
+                        text: 'Contact Us',
+                        link: 'https://pocket-money.site/contact'
+                    }
+                }
+            }
+        };
+        email.text = null;
+        email.html = mailGenerator.generate(email.html);
+
         return await  do_send_mail(user,pass,email);
     }catch(error){
       results.error = {...error};
