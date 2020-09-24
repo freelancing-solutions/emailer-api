@@ -32,6 +32,7 @@ const do_send_mail = async (user,pass,email) => {
         let info =  await transporter.sendMail({
             from : email.from,
             to : email.to,
+            subject: email.subject,
             html : email.html
         });
       results.status = true;
