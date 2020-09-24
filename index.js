@@ -21,7 +21,7 @@ const app = express();
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // parse json requests
-app.use(bodyParser.json({extended: true}));
+app.use(bodyParser.json());
 // adding cors
 app.use(cors());
 /*** set response headers to json this insures that the calling app can accept json strings **/
@@ -40,9 +40,7 @@ const authorize =  (req,res,next) => {
         const route  = req.originalUrl;
         const routes = route.split('/');
         const key = String(routes[routes.length - 1]).trim();
-        const api_call = String(routes[routes.length - 2]).trim();
-
-        res.locals.api_call = api_call;
+        res.locals.api_call = String(routes[routes.length - 2]).trim();
 
         if (internal_key === key){
             res.locals.authorized = true;          
@@ -50,7 +48,6 @@ const authorize =  (req,res,next) => {
             res.locals.authorized = false;
             return res.status(401).json(results);            
         }
-
     }catch(error){
         res.locals.authorized = false;
         results.status = false;
@@ -64,10 +61,9 @@ const authorize =  (req,res,next) => {
 /*** email buffer would be useful for sending bulk emails on api version 2 **/
 /*** bulk email sending support will only be for noreply email address **/
 const mem_store_buffer = (req,res,next) => {
-
     try{
-        console.log(email_store);
-        res.locals.email = email_store.email_store.store_email(res.locals.email,res.locals.api_call);
+        // console.log(email_store);
+        // res.locals.email = email_store.email_store.store_email(res.locals.email,res.locals.api_call);
         next();
     }catch (error){
         next(error);
@@ -122,7 +118,7 @@ app.get('/', (req,res) => {
 /****
  * 
  * Personal Middle Ware
- */
+ ***/
 
 
 app.use(authorize);

@@ -183,8 +183,6 @@ const send_affiliates_messages = async email => {
 /***
  * Used to send notification Messages
  * ...Deposit Verified Message, Withdrawal Sent, Account Funded Message
- *
- *
  **/
 const send_info = async email => {
    const results = {status : false, payload : {}, error :{}};
