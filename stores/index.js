@@ -1,5 +1,7 @@
 
 
+/*** this email buffer will be used to send bulk emails ***/
+/*** bulk email support started at version 2 of our api **/
 
 function email_store(){
     this.max_mem_store_size = 500;
@@ -11,8 +13,8 @@ function email_store(){
         text : '',
         html : '',
         route : '',
-        sent : false
-
+        sent : false,
+        request_time : Date.now()
     }
 
 

@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const Mailgen = require('mailgen');
 const config = require("config");
 
 /**
@@ -6,6 +7,16 @@ const config = require("config");
  * Used to send messages such as
  * Login Codes, Email Verification Codes , Transaction Activation Codes, such as Withdrawals
  **/
+const mailGenerator = new Mailgen({
+    theme: 'default',
+    product: {
+        // Appears in header & footer of e-mails
+        name: 'Pocket Money Wallet Pty LTD',
+        link: 'https://pcoket-money.site',
+        // Optional product logo
+        logo: 'https://pocket-money.site/static/media/growyourbusiness.465ba114.jpg'
+    }
+});
 
 const do_send_mail = async (user,pass,email) => {
     const results = {status : false, payload : {}, error :{}};
@@ -18,11 +29,17 @@ const do_send_mail = async (user,pass,email) => {
               pass: pass
             },
           });
-        let info =  await transporter.sendMail(email);
+        let info =  await transporter.sendMail({
+            from : email.from,
+            to : email.to,
+            html : email.html
+        });
       results.status = true;
       results.payload = {...info};
       return results;
-}
+};
+
+
 
 const send_noreply_messages = async email => {
 
@@ -31,11 +48,27 @@ const send_noreply_messages = async email => {
         email.from = process.env.NOREPLY_USERNAME || config.get('noreply_username');
         const user = process.env.NOREPLY_USERNAME || config.get('noreply_username');
         const pass = process.env.NOREPLY_PASSWORD || config.get('noreply_password');
+        email.html = {
+        body: {
+                title: 'Welcome to Pocket Money Wallet',
+                intro: email.text,
+                action: {
+                    instructions: 'If there is anything we can help you with in anyway please let us know',
+                    button : {
+                        color: '#053473',
+                        text: 'Contact Us',
+                        link: 'https://pocket-money.site/contact'
+                    }
+                }
+            }
+        };
+        email.text = null;
+        email.html = mailGenerator.generate(email.html);
+
         return await  do_send_mail(user,pass,email);
     }catch(error){
       results.error = {...error};
     }
-
     return results
 };
 
@@ -50,7 +83,6 @@ const send_support = async email => {
     }catch(error){
       results.error = {...error};
     }
-
     return results
 };
 
@@ -70,7 +102,6 @@ const send_admin_messages = async email => {
     }catch(error){
       results.error = {...error};
     }
-
     return results
 };
 
@@ -90,7 +121,6 @@ const send_affiliates_messages = async email => {
     }catch(error){
       results.error = {...error};
     }
-
     return results
 };
 
@@ -110,7 +140,6 @@ const send_info = async email => {
     }catch(error){
       results.error = {...error};
     }
-
     return results
 };
 

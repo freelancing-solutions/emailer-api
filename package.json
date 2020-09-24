@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
+    "mailgen": "^2.0.13",
     "moment": "^2.26.0",
     "mongoose": "^5.9.18",
     "nodemailer": "^6.4.8",
