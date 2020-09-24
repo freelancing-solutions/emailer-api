@@ -52,7 +52,8 @@ const send_noreply_messages = async email => {
         email.html = {
         body: {
                 title: 'Welcome to Pocket Money Wallet',
-                intro: email.text,
+                signature: 'Thank You',
+                intro: email.html,
                 action: {
                     instructions: 'If there is anything we can help you with in anyway please let us know',
                     button : {
