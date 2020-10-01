@@ -30,7 +30,7 @@ const do_send_mail = async (user,pass,email) => {
             },
           });
         let info =  await transporter.sendMail({
-            from : email.from,
+            from :`Pocket Money Wallet <${email.from}>` ,
             to : email.to,
             subject: email.subject,
             html : email.html

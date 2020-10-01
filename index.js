@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("config");
@@ -110,6 +112,9 @@ const verify_message = (req, res, next) => {
     res.locals.email = {...email};
     next()
 };
+
+
+
 
 app.get('/', (req,res) => {
     res.status(200).send({message: 'hello world'});
