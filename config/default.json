@@ -1,0 +1,18 @@
+{
+    "envir"  : "development",
+    "INTERNAL_KEY" : "AUJmsdufsidfiubbiIUBIUYBaybuUYGUY-ldfsnldnLLNFOIDN-k2X3-xEq8dDK2qOL4TMqj5sLdC056",
+    "mongoDB": "mongodb://mobius:mobius5627084@ds249798.mlab.com:49798/heroku_tnd4kknh",
+    "noreply_username": "noreply@mail.pocket-money.site",
+    "noreply_password": "b564bbb6a5aa1ceb882fa67b48d0c63e-0f472795-48e69f51",
+    "smtp_server": "smtp.mailgun.org",
+    "admin_username": "admin@mail.pocket-money.site",
+    "admin_password": "828e03f114f88a58aaffcd8c65fc142e-0f472795-ae81ec07",
+    "info_username" : "info@mail.pocket-money.site",
+    "info_password" : "e583b3eb095b58aa908877530413c6ad-0f472795-340fea80",
+    "affiliates_username" : "affiliates@mail.pocket-money.site",
+    "affiliates_password" : "5f8a8dccd5cf4ce8bd103a7625e95f15-0f472795-3806b89a",
+    "postmaster_username" : "postmaster@mail.pocket-money.site",
+    "postmaster_password" : "7b44de7f27bc72246f26584801e8917a-0f472795-ff9b0ed2",
+    "support_username" : "support@mail.pocket-money.site",
+    "support_password" : "18813f5309ed1a3a09a93ebb704ca706-0f472795-109e549a"
+}

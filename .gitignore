@@ -4,12 +4,8 @@
 .firebase
 .idea
 
-
 # testing
 /coverage
-
-#development
-/config/default.json
 
 # production
 /build
