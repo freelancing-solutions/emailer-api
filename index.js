@@ -14,6 +14,7 @@ const email_store = require('./stores');
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
 // });
+//
 // const db = mongoose.connection;
 // db.on("connected", () => console.log("mongo db connected"));
 // db.on("disconnected", () => console.log("mongo db disconnected"));
@@ -45,10 +46,10 @@ const authorize =  (req,res,next) => {
         res.locals.api_call = String(routes[routes.length - 2]).trim();
 
         if (internal_key === key){
-            res.locals.authorized = true;          
-        }else{        
+            res.locals.authorized = true;
+        }else{
             res.locals.authorized = false;
-            return res.status(401).json(results);            
+            return res.status(401).json(results);
         }
     }catch(error){
         res.locals.authorized = false;
@@ -79,8 +80,8 @@ const verify_message = (req, res, next) => {
     const results = {status : false, payload: {}, error: {}};
     let email = { subject: '',text : '',html: '',to : ''};
 
-    if (res.locals.authorized){              
-      email ={ ... req.body};    
+    if (res.locals.authorized){
+      email ={ ... req.body};
       console.log('email ', email);
       if (validator.validate(email.to) === false){
         results.status = false;
@@ -118,10 +119,11 @@ const verify_message = (req, res, next) => {
 
 app.get('/', (req,res) => {
     res.status(200).send({message: 'hello world'});
+    res.redirect(config.get('endpoint'))
 });
 
-/****
- * 
+/***
+ *
  * Personal Middle Ware
  ***/
 
@@ -134,5 +136,5 @@ app.use('/api/v2/', require('./routes/version2'));
 
 // listening for requests
 app.listen(PORT).on('listening', () => {
-    console.log(`Bulk Emailer API Running on  ${PORT} `);    
+    console.log(`Bulk Emailer API Running on  ${PORT} `);
 });

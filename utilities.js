@@ -173,7 +173,7 @@ class Utilities {
     // try removing trailing and leading spaces
     // return as integer if int and as lower case characters if string)
     try {
-      const processed = String(data).trimLeft().trimRight();
+      let processed = String(data).trimLeft().trimRight();
       // trim characters if greater than 56
       if (processed.length > this.max_input_len) {
         processed = processed.splice(0, this.max_input_len);
@@ -200,7 +200,7 @@ class Utilities {
 
   parseNames = (names) => {
     try {
-      const processed = String(names).trimLeft().trimRight();
+      let processed = String(names).trimLeft().trimRight();
       if (processed.length > this.max_name_len) {
         processed = processed.splice(0, this.max_name_len);
       }
@@ -214,7 +214,7 @@ class Utilities {
     try {
       const processed = String(email).trimLeft().trimRight();
       if (processed.length > this.max_email_len) {
-        processed = processed.splice(0, this.max_email_len);
+        let processed = processed.splice(0, this.max_email_len);
       }
       if (this.validateEmail(processed)) {
         return processed;

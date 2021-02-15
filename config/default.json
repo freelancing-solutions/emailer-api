@@ -14,5 +14,6 @@
     "postmaster_username" : "postmaster@mail.pocket-money.site",
     "postmaster_password" : "7b44de7f27bc72246f26584801e8917a-0f472795-ff9b0ed2",
     "support_username" : "support@mail.pocket-money.site",
-    "support_password" : "18813f5309ed1a3a09a93ebb704ca706-0f472795-109e549a"
+    "support_password" : "18813f5309ed1a3a09a93ebb704ca706-0f472795-109e549a",
+    "endpoint" : "https://pocket-money.site/emailer-api"
 }
