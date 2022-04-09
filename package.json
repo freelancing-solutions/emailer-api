@@ -22,7 +22,7 @@
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "mailgen": "^2.0.14",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "mongoose": "^5.11.16",
     "nodemailer": "^6.4.18",
     "nodemon": "^2.0.7",
