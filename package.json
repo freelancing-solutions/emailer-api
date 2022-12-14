@@ -20,7 +20,7 @@
     "config": "^3.3.3",
     "cors": "^2.8.5",
     "email-validator": "^2.0.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mailgen": "^2.0.14",
     "moment": "^2.29.1",
     "mongoose": "^5.11.16",
